@@ -1,0 +1,4 @@
+mole
+====
+
+Simple Whackamole Game
