@@ -1,0 +1,79 @@
+     body{
+                background:url("../img/trainbg.jpg");
+                background-position:center;
+
+            }
+            .hole{
+                width:100px;
+                height:100px;
+                display:inline-block;
+                background-color:black;
+                overflow:hidden;
+            }
+            #holeContainer{
+                width: 415px;
+                height: 415px;
+                display:block;
+
+            }
+            img.mole{
+                bottom:-100px;
+                width:100px;
+                position:relative;
+                cursor:pointer;
+            }
+            #time{
+                color:black;
+                font-size:45px;
+                text-decoration:underline;
+                width:50px;
+                top:130px;
+                position:relative;
+                margin:auto;
+                height:50px;
+            }
+            #clock{
+                background:url('../img/stopwatch.png');
+                background-repeat:no-repeat;
+                background-size:contain;
+                width:230px;
+                height:250px;
+                margin-top:-75px;
+                margin-left:900px;;
+            }
+            .L{
+                top:50px;
+                width: 235px;
+                margin:auto;
+                position:relative;
+            }
+            #title{
+                font-size:35px;
+                color:black;
+                position:absolute;
+                left:75px;
+                top:20px;
+                width:300px;
+                font-family:"Trebuchet";
+                text-align:center;
+                text-shadow:0px 0px 3px black;
+            }
+            #playButton{
+                width:200px;
+                border:0px;
+                background-color:black;
+                color:white;
+                box-shadow:0px 0px 20px black;
+                cursor:pointer;
+                height:50px;
+                font-size:30px;
+            }
+            #endMessage{
+                font-size:35px;
+                color:black;
+                text-align:center;
+                margin-top:-45px;
+                margin-bottom:15px;
+                height:40px;
+                text-shadow:1px 1px 5px black;
+            }
