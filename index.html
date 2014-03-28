@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <link href="css/flapper.css" type="text/css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="transform/jquery.transform-0.9.3.min.js"></script>
+        <script src="src/jquery.flapper.js"></script>
+        <script type="text/javascript">
+
+            var timeCount = 60;
+            var scoreCount = 0;
+            var opts = {
+                chars_preset: 'num',
+                align: 'left',
+                width: 4
+            };
+
+            function moleObj(id, cur, next, wait, stay)
+            {
+                this.id = id;
+                this.cur = cur;
+                this.next = next;
+                this.wait = wait * 1000;
+                this.stay = stay * 1000;
+            }
+
+
+            var mole1 = new moleObj(1, 1, 2, 1, 2);
+            var mole2 = new moleObj(2, 2, 4, 2, 3);
+            var mole3 = new moleObj(3, 9, 6, 1, 2);
+
+
+            function updateTime() {
+                if (timeCount > 0) {
+                    timeCount = timeCount - 1;
+                    $("#time").text(timeCount);
+                    if (timeCount < 10) {
+                        $("#time").css("width", "20px");
+                    }
+                }
+                else {
+                    endGame();
+                }
+            }
+
+            function endGame() {
+                $(".mole").css("z-index", "-1");
+                $("#endMessage").text("You Saved " + scoreCount + " Moles");
+                $("#endMessage").fadeIn();
+                $("#playButton").text("Replay?");
+                $("#playButton").fadeIn();
+
+            }
+            function updateScore(num) {
+                return function(id) {
+                    var $score = $('input#score');
+                    num = num || 0;
+                    scoreCount = scoreCount + num;
+                    moleDown(id);
+                    $score.val(scoreCount).change();
+                }
+            }
+            function rand(min, max)
+            {
+                return Math.floor(Math.random() * (max - min + 1) + min);
+            }
+            function moleUp(id, wait) { // 3 moles, pass in id
+                // shows mole, waits time then hides
+                $("#m" + id).animate({bottom: "-20px"}, 100);
+                $("#m" + id).delay(wait).animate({bottom: "-100px"});
+            }
+            function moleDown(id) { // 3 moles, pass in id
+                // overrides any delay and hides mole
+                $("#m" + id).stop();
+                $("#m" + id).animate({bottom: "-100px"}, 100); // interrupts delay
+            }
+
+            function playMole1() {   // moves mole to next position, shows mole for delay, then hides and 
+                // calculates next mole move
+                var totalWait = mole1.stay + mole1.wait;
+                $("#m1").appendTo("#sq" + mole1.next); // move mole into next position
+                moleUp(1, mole1.stay); // show mole
+                mole1.next = rand(1, 16); // random position next
+                mole1.stay = rand(100, 700); // random amount of time it appears next time
+                console.log(mole1.stay);
+                setTimeout(playMole1, totalWait); // wait for next appearance
+
+            }
+
+            function playMole2() {
+                var totalWait = mole2.stay + mole2.wait;
+                $("#m2").appendTo("#sq" + mole2.next); // move mole into next position
+                moleUp(2, mole2.stay); // show mole
+                mole2.next = rand(1, 16); // random position next
+                mole2.stay = rand(200, 400); // random amount of time it appears next time
+                setTimeout(playMole2, totalWait); // wait for next appearance
+            }
+
+            function playMole3() {
+                var totalWait = mole3.stay + mole3.wait;
+                $("#m3").appendTo("#sq" + mole3.next); // move mole into next position
+                moleUp(3, mole3.stay); // show mole
+                mole3.next = rand(1, 16); // random position next
+                mole3.stay = rand(1000, 2000); // random amount of time it appears next time
+                setTimeout(playMole3, totalWait); // wait for next appearance
+            }
+
+            var score1 = updateScore(1);
+
+            function startGame() {
+                if ($("#playButton").text() == "Begin") {
+                    //start clock countdown
+                    $("#playButton").fadeOut();
+                    window.setInterval(updateTime, 1000);
+                    playMole1();
+                    playMole2();
+                    playMole3();
+                }
+                else if ($("#playButton").text() == "Replay?") {
+                    location.reload();
+                }
+            }
+
+
+            $(document).ready(function() {
+
+                // initialize score flapper
+                var $score = $('input#score');
+                $score.flapper(opts).val(scoreCount).change();
+                
+            });
+        </script>
+        <style>
+            body{
+                background:url("img/trainbg.jpg");
+                background-position:center;
+
+            }
+            .hole{
+                width:100px;
+                height:100px;
+                display:inline-block;
+                background-color:black;
+                overflow:hidden;
+            }
+            #holeContainer{
+                width: 415px;
+                height: 415px;
+                display:block;
+
+            }
+            img.mole{
+                bottom:-100px;
+                width:100px;
+                position:relative;
+                cursor:pointer;
+            }
+            #time{
+                color:black;
+                font-size:45px;
+                text-decoration:underline;
+                width:50px;
+                top:130px;
+                position:relative;
+                margin:auto;
+                height:50px;
+            }
+            #clock{
+                background:url('img/stopwatch.png');
+                background-repeat:no-repeat;
+                background-size:contain;
+                width:230px;
+                height:250px;
+                margin-top:-75px;
+                margin-left:900px;;
+            }
+            .L{
+                top:50px;
+                width: 235px;
+                margin:auto;
+                position:relative;
+            }
+            #title{
+                font-size:35px;
+                color:black;
+                position:absolute;
+                left:75px;
+                top:20px;
+                width:300px;
+                font-family:"Trebuchet";
+                text-align:center;
+                text-shadow:0px 0px 3px black;
+            }
+            #playButton{
+                width:200px;
+                border:0px;
+                background-color:black;
+                color:white;
+                box-shadow:0px 0px 20px black;
+                cursor:pointer;
+                height:50px;
+                font-size:30px;
+            }
+            #endMessage{
+                font-size:35px;
+                color:black;
+                text-align:center;
+                margin-top:-45px;
+                margin-bottom:15px;
+                height:40px;
+                text-shadow:1px 1px 5px black;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div id="title">A train is coming.<br/> Save the moles!
+            <button id="playButton" onclick="startGame()">Begin</button></div>
+
+    <center>
+        <input id='score' class="L" />
+    </center>
+    <div id="clock">
+        <div id='time'></div>
+    </div>
+    <center>
+        <div id="endMessage"></div>
+    </center>
+    <center>
+        <div id="holeContainer">
+            <div id="sq1" class="hole">
+                <img id='m1' class='mole' src='img/diglet.png' onclick='score1(1)' />
+                <img id='m2' class='mole' src='img/diglet.png' onclick='score1(2)' />
+                <img id='m3' class='mole' src='img/diglet.png' onclick='score1(3)' />
+                <img id='m4' class='mole' src='img/diglet.png' onclick='score1(4)' />
+            </div>
+            <div id="sq2" class="hole"></div>
+            <div id="sq3" class="hole"></div>
+            <div id="sq4" class="hole"></div>
+            <div id="sq5" class="hole"></div>
+            <div id="sq6" class="hole"></div>
+            <div id="sq7" class="hole"></div>
+            <div id="sq8" class="hole"></div>
+            <div id="sq9" class="hole"></div>
+            <div id="sq10" class="hole"></div>
+            <div id="sq11" class="hole"></div>
+            <div id="sq12" class="hole"></div>
+            <div id="sq13" class="hole"></div>
+            <div id="sq14" class="hole"></div>
+            <div id="sq15" class="hole"></div>
+            <div id="sq16" class="hole"></div>
+        </div>
+    </center>
+</body>
+</html>
